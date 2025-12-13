@@ -1,0 +1,49 @@
+body{display:flex;justify-content:center;font-family:sans-serif;background-color:#333;color:#eee;}
+#title{font-size:1.5em;text-align:center;width:100%;margin-bottom:20px;}
+.all{display:block;max-width:70%;}
+.header-container{position:relative;width:90%;max-width:1200px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.data-management-buttons{display:flex;gap:10px;}
+.anime-list{font-size:1.3em;max-width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:15px;}
+ul.anime-category{list-style:none;padding:0;margin:0;border:1px solid #555;border-radius:5px;background-color:#444;flex:1 1 calc(25% - 11.25px);min-width:max-content;box-sizing:border-box;display:flex;flex-direction:column;}
+@media(max-width:1200px){ul.anime-category{flex:1 1 calc(33.33% - 10px);}}
+@media(max-width:900px){ul.anime-category{flex:1 1 calc(50% - 7.5px);}}
+@media(max-width:60px){ul.anime-category{flex:1 1 100%;}}
+ul.anime-category h3{background-color:#555;padding:10px;margin:0;display:flex;justify-content:space-between;align-items:center;color:#fff;cursor:pointer;}
+ul.anime-category li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-top:1px solid #555;}
+ul.anime-category li:first-of-type{border-top:none;}
+ul.anime-category a{text-decoration:none;color:#87CEEB;flex-grow:1;}
+ul.anime-category a:hover{color:#00BFFF;}
+.delete-btn{color:#ff6347;cursor:pointer;margin-left:10px;font-weight:bold;font-size:0.8em;padding:2px 5px;border-radius:3px;transition:background-color 0.3s ease;}
+.delete-btn:hover{background-color:#ff634740;}
+.toggle-add-btn{font-size:1.2em;font-weight:bold;background:none;border:none;color:#fff;cursor:pointer;padding:0 5px;margin-left:10px;transition:transform 0.2s ease-in-out;}
+.toggle-add-btn:hover{transform:scale(1.5);}
+.add-anime-container{padding:10px;border-top:1px solid #555;display:none;flex-direction:column;gap:5px;margin-top:auto;}
+.add-anime-container.visible{display:flex;}
+.input-group{display:flex;gap:5px;width:100%;}
+.add-anime-input,.add-anime-link-input{flex-grow:1;padding:5px;border:1px solid #777;border-radius:3px;background-color:#333;color:#eee;}
+.add-anime-btn{padding:5px 10px;background-color:#4CAF50;color:white;border:none;border-radius:3px;cursor:pointer;transition:background-color 0.3s ease;align-self:flex-end;}
+.add-anime-btn:hover{background-color:#45a049;}
+.data-management-buttons button{padding:8px 15px;border:none;border-radius:5px;cursor:pointer;background-color:#6a5acd;color:white;font-size:0.9em;transition:background-color 0.3s ease;}
+.data-management-buttons button:hover{background-color:#5a4a9b;}
+.return-btn{color:#ffd700;cursor:pointer;margin-left:10px;font-weight:bold;font-size:0.8em;padding:2px 5px;border-radius:3px;transition:background-color 0.3s ease;}
+.return-btn:hover{background-color:#ffd70040;}
+.watched-btn{cursor:pointer;margin-right:10px;font-weight:bold;font-size:0.8em;padding:2px 5px;border-radius:3px;transition:background-color 0.3s ease;}
+.watched-btn:hover{background-color:rgba(0,128,0,0.25);}
+.bad-btn{cursor:pointer;margin-right:10px;font-weight:bold;font-size:0.8em;padding:2px 5px;border-radius:3px;transition:background-color 0.3s ease;}
+.bad-btn:hover{background-color:rgba(255,0,0,0.25);}
+.delete-btn{color:#ff6347;cursor:pointer;margin-left:10px;font-weight:bold;font-size:0.8em;padding:2px 5px;border-radius:3px;transition:background-color 0.3s ease;}
+.delete-btn:hover{background-color:#ff634740;}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0, 0, 0, 0.7);display:flex;justify-content:center;align-items:center;z-index:1000;}
+.notes-modal{background-color:#444;color:#eee;padding:25px;border-radius:8px;width:90%;max-width:500px;box-shadow:0 4px 15px rgba(0, 0, 0, 0.5);display:flex;flex-direction:column;}
+.notes-modal h3{margin-top:0;border-bottom:1px solid #555;padding-bottom:10px;}
+#notes-textarea{width:100%;height:200px;margin:15px 0;padding:10px;background-color:#333;color:#eee;border:1px solid #555;border-radius:4px;resize:vertical;}
+.modal-buttons{display:flex;justify-content:flex-end;gap:10px;}
+.modal-buttons button{padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:1em;transition:background-color 0.3s ease;}
+#save-notes-btn{background-color:#4CAF50;color:white;}
+#save-notes-btn:hover{background-color:#45a049;}
+#close-notes-btn{background-color:#f44336;color:white;}
+#close-notes-btn:hover{background-color:#da190b;}
+.anime-notes{position:absolute;top:calc(100% + 5px);background-color:#555;color:#fff;padding:8px;border-radius:5px;font-size:0.8em;white-space:pre-wrap;word-break:break-word;box-shadow:0 2px 8px rgba(0, 0, 0, 0.3);z-index:999;display:none;max-width:700px;text-align:left;}
+ul.anime-category li{position:relative;}
+.edit-notes-btn{margin-left:10px;cursor:pointer;font-size:0.8em;color:#87CEEB;}
+::-webkit-scrollbar{width:0;}
