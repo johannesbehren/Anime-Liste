@@ -1,290 +1,119 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <link rel="icon"href="Logo.png"type="image/png">
-    <meta charset="UTF-8">
-    <meta name="viewport"content="width=device-width, initial-scale=1.0">
-    <title>Animes</title>
-    <link rel="stylesheet"href="Anime.css">
-</head>
-<body>
-<div class="all">
-    <div class="header-container">
-        <h1 id="title">Animes, die ich geschaut habe:</h1>
-        <div class="data-management-buttons">
-            <button id="download-data-btn">Daten herunterladen</button>
-            <input type="file"id="upload-data-input"accept=".json"style="display: none;">
-            <button id="upload-data-btn">Dateien hochladen</button>
+    <head>
+        <link rel="icon" href="Logo.png" type="image/png" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Animes</title>
+        <link rel="stylesheet" href="Anime.css" />
+    </head>
+    <body>
+        <div class="all">
+            <div class="header-container">
+                <h1 id="title">Animes, die ich geschaut habe:</h1>
+                <div class="data-management-buttons">
+                    <button id="download-data-btn">Daten herunterladen</button>
+                    <input
+                        type="file"
+                        id="upload-data-input"
+                        accept=".json"
+                        style="display: none;"
+                    />
+                    <button id="upload-data-btn">Dateien hochladen</button>
+                </div>
+            </div>
+            <div class="anime-list" id="watched-anime-list"></div>
+
+            <h1 id="title" style="margin-top: 40px;">
+                Animes, die ich schauen will:
+            </h1>
+
+            <div class="anime-list" id="watchlist-anime-list"></div>
+
+            <h1 id="title" style="margin-top: 40px;">
+                Animes, die ich nicht mochte:
+            </h1>
+
+            <div class="anime-list" id="bad-anime-list"></div>
         </div>
-    </div>
-    <div class="anime-list"id="watched-anime-list">
-        <ul class="anime-category">
-            <h3>A wie Apfel</h3>
-            </ul>
-        <ul class="anime-category">
-            <h3>B wie Bananane</h3>        
-        </ul>
-        <ul class="anime-category">
-            <h3>C wie Chrome</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>D wie Dachs</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>E wie Eichhörnchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>F wie Fliege</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>G wie Gunshots</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>H wie Hellikopter</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>I wie Igelwürstchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>J wie Jungeeee!!!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>K wie Klebstoffaffe</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>L wie Link in der Bio</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>M wie Masturbation</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>N wie Nationalhymne</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>O wie O my God!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>P wie Programmieren</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Q wie Quantillion</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>R wie Rassist</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>S wie Süßigkeit</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>T wie Tatort</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>U wie Ufo</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>V wie Vogel</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>W wie Wiederlich</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>X wie X-Beliebig</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Y wie Your Mom Gay Lol</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Z wie Zigarette</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3># wie Zahl</h3>
-        </ul>
-    </div>
-
-    <h1 id="title"style="margin-top: 40px;">Animes, die ich schauen will:</h1>
-
-    <div class="anime-list"id="watchlist-anime-list">
-        <ul class="anime-category">
-            <h3>A wie Apfel</h3>
-            </ul>
-        <ul class="anime-category">
-            <h3>B wie Bananane</h3>        
-        </ul>
-        <ul class="anime-category">
-            <h3>C wie Chrome</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>D wie Dachs</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>E wie Eichhörnchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>F wie Fliege</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>G wie Gunshots</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>H wie Hellikopter</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>I wie Igelwürstchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>J wie Jungeeee!!!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>K wie Klebstoffaffe</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>L wie Link in der Bio</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>M wie Masturbation</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>N wie Nationalhymne</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>O wie O my God!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>P wie Programmieren</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Q wie Quantillion</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>R wie Rassist</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>S wie Süßigkeit</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>T wie Tatort</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>U wie Ufo</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>V wie Vogel</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>W wie Wiederlich</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>X wie X-Beliebig</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Y wie Your Mom Gay Lol</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Z wie Zigarette</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3># wie Zahl</h3>
-        </ul>
-    </div>
-
-    <h1 id="title"style="margin-top: 40px;">Animes, die ich nicht mochte:</h1>
-
-    <div class="anime-list"id="bad-anime-list">
-        <ul class="anime-category">
-            <h3>A wie Apfel</h3>
-            </ul>
-        <ul class="anime-category">
-            <h3>B wie Bananane</h3>        
-        </ul>
-        <ul class="anime-category">
-            <h3>C wie Chrome</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>D wie Dachs</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>E wie Eichhörnchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>F wie Fliege</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>G wie Gunshots</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>H wie Hellikopter</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>I wie Igelwürstchen</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>J wie Jungeeee!!!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>K wie Klebstoffaffe</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>L wie Link in der Bio</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>M wie Masturbation</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>N wie Nationalhymne</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>O wie O my God!</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>P wie Programmieren</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Q wie Quantillion</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>R wie Rassist</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>S wie Süßigkeit</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>T wie Tatort</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>U wie Ufo</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>V wie Vogel</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>W wie Wiederlich</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>X wie X-Beliebig</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Y wie Your Mom Gay Lol</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3>Z wie Zigarette</h3>
-        </ul>
-        <ul class="anime-category">
-            <h3># wie Zahl</h3>
-        </ul>
-    </div>
-</div>
-<div id="notes-modal-overlay"class="modal-overlay"style="display:none;">
-    <div class="notes-modal">
-        <h3 id="modal-title">Notizen für:</h3>
-        <textarea id="notes-textarea"placeholder="Gib deine Notizen hier ein..."></textarea>
-        <div class="modal-buttons">
-            <button id="save-notes-btn">Speichern</button>
-            <button id="read-notes-btn">Text vorlesen</button>
-            <button id="stop-read-btn" style="display: none;">Stoppen</button>
-            <button id="close-notes-btn">Schließen</button>
+        <div
+            id="notes-modal-overlay"
+            class="modal-overlay"
+            style="display: none;"
+        >
+            <div class="notes-modal">
+                <h3 id="modal-title">Notizen für:</h3>
+                <textarea
+                    id="notes-textarea"
+                    placeholder="Gib deine Notizen hier ein..."
+                ></textarea>
+                <div class="modal-buttons">
+                    <button id="save-notes-btn">Speichern</button>
+                    <button id="read-notes-btn">Text vorlesen</button>
+                    <button id="stop-read-btn" style="display: none;">
+                        Stoppen
+                    </button>
+                    <button id="close-notes-btn">Schließen</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<script src="Anime.js"></script>
-</body>
+        <script defer src="Anime.js"></script>
+
+        <script>
+            const elements = [
+                "A wie Apfel",
+                "B wie Bananane",
+                "C wie Chrome",
+                "D wie Dachs",
+                "E wie Eichhörnchen",
+                "F wie Fliege",
+                "G wie Gunshots",
+                "H wie Hellikopter",
+                "I wie Igelwürstchen",
+                "J wie Jungeeee!!!",
+                "K wie Klebstoffaffe",
+                "L wie Link in der Bio",
+                "M wie Masturbation",
+                "N wie Nationalhymne",
+                "O wie O my God!",
+                "P wie Programmieren",
+                "Q wie Quantillion",
+                "R wie Rassist",
+                "S wie Süßigkeit",
+                "T wie Tatort",
+                "U wie Ufo",
+                "V wie Vogel",
+                "W wie Wiederlich",
+                "X wie X-Beliebig",
+                "Y wie Your Mom Gay Lol",
+                "Z wie Zigarette",
+                "# wie Zahl",
+            ];
+
+            const container_watched = document.getElementById(
+                "watched-anime-list"
+            );
+            const container_watchlist = document.getElementById(
+                "watchlist-anime-list"
+            );
+            const container_bad = document.getElementById("bad-anime-list");
+
+            const add_list_elements = (container) => {
+                elements.forEach((element) => {
+                    const ul = document.createElement("ul");
+                    ul.className = "anime-category";
+
+                    const h3 = document.createElement("h3");
+                    h3.textContent = element;
+
+                    ul.appendChild(h3);
+                    container.appendChild(ul);
+                });
+            };
+
+            add_list_elements(container_watched);
+            add_list_elements(container_watchlist);
+            add_list_elements(container_bad);
+        </script>
+    </body>
 </html>
