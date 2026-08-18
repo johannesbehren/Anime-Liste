@@ -11,35 +11,73 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeNotesBtn = document.getElementById('close-notes-btn');
     const modalTitle = document.getElementById('modal-title');
     const readNotesBtn = document.getElementById('read-notes-btn');
+    const stopReadBtn = document.getElementById('stop-read-btn');
+    const addMomentBtn = document.getElementById('add-moment-btn');
+    const momentsContainer = document.getElementById('moments-container');
 
     const STORAGE_KEY_WATCHED = 'animes_watched';
     const STORAGE_KEY_WATCHLIST = 'animes_watchlist';
     const STORAGE_KEY_BAD = 'animes_bad';
+    const STORAGE_KEY_NOTES = 'anime_notes';
+    const STORAGE_KEY_MOMENTS = 'anime_moments';
 
     let watchedAnimes = {};
     let watchlistAnimes = {};
     let badAnimes = {};
+    let animeNotes = {};
+    let animeMoments = {};
 
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
 
-    alphabet.split('').forEach(char => {
+    // Deine custom Kategorienamen
+    const categoryTitles = {
+        'A': 'A wie Apfel', 'B': 'B wie Bananane', 'C': 'C wie Chrome',
+        'D': 'D wie Dachs', 'E': 'E wie Eichhörnchen', 'F': 'F wie Fliege',
+        'G': 'G wie Gunshots', 'H': 'H wie Hellikopter', 'I': 'I wie Igelwürstchen',
+        'J': 'J wie Jungeeee!!!', 'K': 'K wie Klebstoffaffe', 'L': 'L wie Link in der Bio',
+        'M': 'M wie Masturbation', 'N': 'N wie Nationalhymne', 'O': 'O my God!',
+        'P': 'P wie Programmieren', 'Q': 'Q wie Quantillion', 'R': 'R wie Rassist',
+        'S': 'S wie Süßigkeit', 'T': 'T wie Tatort', 'U': 'U wie Ufo',
+        'V': 'V wie Vogel', 'W': 'W wie Wiederlich', 'X': 'X wie X-Beliebig',
+        'Y': 'Y wie Your Mom Gay Lol', 'Z': 'Z wie Zigarette', '#': '# wie Zahl'
+    };
+
+    alphabet.split('').concat('#').forEach(char => {
         watchedAnimes[char] = [];
         watchlistAnimes[char] = [];
         badAnimes[char] = [];
     });
-    watchedAnimes['#'] = [];
-    watchlistAnimes['#'] = [];
-    badAnimes['#'] = [];
 
-    const STORAGE_KEY_NOTES = 'anime_notes';
-    let animeNotes = {};
+    // 1. Kategorien dynamisch in HTML generieren
+    const generateCategoryHTML = () => {
+        const containers = [watchedAnimeListEl, watchlistAnimeListEl, badAnimeListEl];
+
+        containers.forEach(container => {
+            container.innerHTML = '';
+            Object.entries(categoryTitles).forEach(([char, title]) => {
+                const ul = document.createElement('ul');
+                ul.classList.add('anime-category');
+
+                const h3 = document.createElement('h3');
+                h3.textContent = title;
+                h3.dataset.char = char;
+
+                ul.appendChild(h3);
+                container.appendChild(ul);
+
+                // Eingabefelder (+) für jede Kategorie anheften
+                addInputAndButton(ul);
+            });
+        });
+    };
 
     const saveData = () => {
         localStorage.setItem(STORAGE_KEY_WATCHED, JSON.stringify(watchedAnimes));
         localStorage.setItem(STORAGE_KEY_WATCHLIST, JSON.stringify(watchlistAnimes));
         localStorage.setItem(STORAGE_KEY_BAD, JSON.stringify(badAnimes));
         localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(animeNotes));
+        localStorage.setItem(STORAGE_KEY_MOMENTS, JSON.stringify(animeMoments));
     };
 
     const loadData = () => {
@@ -47,19 +85,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const storedWatchlist = localStorage.getItem(STORAGE_KEY_WATCHLIST);
         const storedBad = localStorage.getItem(STORAGE_KEY_BAD);
         const storedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
+        const storedMoments = localStorage.getItem(STORAGE_KEY_MOMENTS);
 
-        if (storedWatched) {
-            watchedAnimes = JSON.parse(storedWatched);
-        }
-        if (storedWatchlist) {
-            watchlistAnimes = JSON.parse(storedWatchlist);
-        }
-        if (storedBad) {
-            badAnimes = JSON.parse(storedBad);
-        }
-        if (storedNotes) {
-            animeNotes = JSON.parse(storedNotes);
-        }
+        if (storedWatched) { watchedAnimes = JSON.parse(storedWatched); }
+        if (storedWatchlist) { watchlistAnimes = JSON.parse(storedWatchlist); }
+        if (storedBad) { badAnimes = JSON.parse(storedBad); }
+        if (storedNotes) { animeNotes = JSON.parse(storedNotes); }
+        if (storedMoments) { animeMoments = JSON.parse(storedMoments); }
+    };
+
+    const createMomentRow = (data = { season: '', episode: '', time: '', quote: '' }) => {
+        const row = document.createElement('div');
+        row.classList.add('moment-row');
+
+        const sInput = document.createElement('input');
+        sInput.type = 'text'; sInput.placeholder = 'S'; sInput.value = data.season || '';
+        sInput.classList.add('moment-input', 'moment-season');
+
+        const eInput = document.createElement('input');
+        eInput.type = 'text'; eInput.placeholder = 'E'; eInput.value = data.episode || '';
+        eInput.classList.add('moment-input', 'moment-episode');
+
+        const tInput = document.createElement('input');
+        tInput.type = 'text'; tInput.placeholder = '15:52'; tInput.value = data.time || '';
+        tInput.classList.add('moment-input', 'moment-time');
+
+        const qInput = document.createElement('input');
+        qInput.type = 'text'; qInput.placeholder = '"Zitat / Beschreibung"'; qInput.value = data.quote || '';
+        qInput.classList.add('moment-input', 'moment-quote');
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button'; delBtn.innerHTML = '🗑️'; delBtn.classList.add('delete-moment-btn');
+        delBtn.addEventListener('click', () => row.remove());
+
+        row.appendChild(sInput); row.appendChild(eInput); row.appendChild(tInput); row.appendChild(qInput); row.appendChild(delBtn);
+        return row;
     };
 
     const createAnimeListItem = (anime, listType) => {
@@ -71,163 +131,151 @@ document.addEventListener('DOMContentLoaded', () => {
         newLi.appendChild(newLink);
 
         if (listType === 'watched' || listType === 'bad') {
-            addReturnButton(newLi);
-            addDeleteButton(newLi);
+            addReturnButton(newLi); addDeleteButton(newLi);
         } else if (listType === 'watchlist') {
-            addCheckbox(newLi);
-            addBadButton(newLi);
-            addDeleteButton(newLi);
+            addCheckbox(newLi); addBadButton(newLi); addDeleteButton(newLi);
         }
-        
         addNotesFunctionality(newLi, anime.name);
-        
         return newLi;
     };
-    
+
     const addNotesFunctionality = (li, animeName) => {
         const link = li.querySelector('a');
         const editBtn = document.createElement('span');
         editBtn.classList.add('edit-notes-btn');
+        editBtn.textContent = ' 📝';
         li.insertBefore(editBtn, link.nextSibling);
+
         const notesPopup = document.createElement('div');
         notesPopup.classList.add('anime-notes');
         li.appendChild(notesPopup);
-        
-        editBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openNotesModal(animeName);
-        });
 
-        link.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            openNotesModal(animeName);
-        });
-        
+        editBtn.addEventListener('click', (e) => { e.stopPropagation(); openNotesModal(animeName); });
+        link.addEventListener('contextmenu', (e) => { e.preventDefault(); openNotesModal(animeName); });
+
         li.addEventListener('mouseenter', () => {
             const notes = animeNotes[animeName] || '';
-            if (notes.trim()) {
-                notesPopup.textContent = notes;
+            const moments = animeMoments[animeName] || [];
+
+            let textContent = '';
+            if (notes.trim()) { textContent += notes.trim(); }
+
+            if (moments.length > 0) {
+                if (textContent) textContent += '\n\n';
+                textContent += '--- Beste Momente ---\n';
+                moments.forEach(m => {
+                    let line = '';
+                    if (m.season) line += `S${m.season} `;
+                    if (m.episode) line += `E${m.episode} `;
+                    if (m.time) line += `| ${m.time} `;
+                    if (m.quote) line += `| "${m.quote}"`;
+                    textContent += line.trim() + '\n';
+                });
+            }
+
+            if (textContent.trim()) {
+                notesPopup.textContent = textContent.trim();
                 notesPopup.style.display = 'block';
             }
         });
 
-        li.addEventListener('mouseleave', () => {
-            notesPopup.style.display = 'none';
-        });
+        li.addEventListener('mouseleave', () => { notesPopup.style.display = 'none'; });
     };
-    
+
     const openNotesModal = (animeName) => {
         notesModalOverlay.style.display = 'flex';
         modalTitle.textContent = `Notizen für: ${animeName}`;
         notesTextarea.value = animeNotes[animeName] || '';
-        notesTextarea.focus();
         notesTextarea.dataset.animeName = animeName;
+
+        momentsContainer.innerHTML = '';
+        const moments = animeMoments[animeName] || [];
+        moments.forEach(m => { momentsContainer.appendChild(createMomentRow(m)); });
+
+        notesTextarea.focus();
     };
-    
+
     const closeNotesModal = () => {
-        window.speechSynthesis.cancel(); // Bestehende Sprachausgabe stoppen
+        if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); }
         notesModalOverlay.style.display = 'none';
         notesTextarea.value = '';
         notesTextarea.dataset.animeName = '';
-        // Buttons auf den Standardzustand zurücksetzen
+        momentsContainer.innerHTML = '';
         readNotesBtn.style.display = 'inline-block';
-        stopReadBtn.style.display = 'none';
+        if (stopReadBtn) stopReadBtn.style.display = 'none';
     };
+
+    addMomentBtn.addEventListener('click', () => { momentsContainer.appendChild(createMomentRow()); });
 
     saveNotesBtn.addEventListener('click', () => {
         const animeName = notesTextarea.dataset.animeName;
         const notes = notesTextarea.value.trim();
+
         if (animeName) {
-            if (notes) {
-                animeNotes[animeName] = notes;
-            } else {
-                delete animeNotes[animeName];
-            }
+            if (notes) { animeNotes[animeName] = notes; }
+            else { delete animeNotes[animeName]; }
+
+            const momentRows = momentsContainer.querySelectorAll('.moment-row');
+            const momentsData = [];
+
+            momentRows.forEach(row => {
+                const season = row.querySelector('.moment-season').value.trim();
+                const episode = row.querySelector('.moment-episode').value.trim();
+                const time = row.querySelector('.moment-time').value.trim();
+                const quote = row.querySelector('.moment-quote').value.trim();
+
+                if (season || episode || time || quote) { momentsData.push({ season, episode, time, quote }); }
+            });
+
+            if (momentsData.length > 0) { animeMoments[animeName] = momentsData; }
+            else { delete animeMoments[animeName]; }
+
             saveData();
             closeNotesModal();
         }
     });
 
     closeNotesBtn.addEventListener('click', closeNotesModal);
-    
-    notesModalOverlay.addEventListener('click', (e) => {
-        if (e.target === notesModalOverlay) {
-            closeNotesModal();
-        }
-    });
+    notesModalOverlay.addEventListener('click', (e) => { if (e.target === notesModalOverlay) { closeNotesModal(); } });
 
-    // Funktionalität zum Vorlesen des Textes hinzufügen
     readNotesBtn.addEventListener('click', () => {
         const textToRead = notesTextarea.value.trim();
-        
-        // Überprüfen, ob der Browser die Web Speech API unterstützt
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(textToRead);
             utterance.lang = 'de-DE';
             window.speechSynthesis.speak(utterance);
         } else {
-            alert('Sorry musst selber alles Lesen, oder nutze anderen Browser (z. B. Brave).');
+            alert('Sorry, musst selber alles lesen.');
         }
     });
-    
+
     const renderAnimes = () => {
         document.querySelectorAll('.anime-category').forEach(ul => {
             Array.from(ul.children).forEach(child => {
-                if (child.tagName.toLowerCase() === 'li') {
-                    child.remove();
-                }
+                if (child.tagName.toLowerCase() === 'li') { child.remove(); }
             });
         });
 
-        for (const char in watchedAnimes) {
-            const categoryUl = watchedAnimeListEl.querySelector(`ul.anime-category h3[data-char="${char}"]`)?.parentNode;
-            if (categoryUl) {
-                watchedAnimes[char].sort((a, b) => a.name.localeCompare(b.name));
-                watchedAnimes[char].forEach(anime => {
-                    const li = createAnimeListItem(anime, 'watched');
-                    const addContainer = categoryUl.querySelector('.add-anime-container');
-                    if (addContainer) {
-                        categoryUl.insertBefore(li, addContainer);
-                    } else {
-                        categoryUl.appendChild(li);
-                    }
-                });
+        const renderSection = (dataList, parentEl, listType) => {
+            for (const char in dataList) {
+                const categoryUl = parentEl.querySelector(`ul.anime-category h3[data-char="${char}"]`)?.parentNode;
+                if (categoryUl) {
+                    dataList[char].sort((a, b) => a.name.localeCompare(b.name));
+                    dataList[char].forEach(anime => {
+                        const li = createAnimeListItem(anime, listType);
+                        const addContainer = categoryUl.querySelector('.add-anime-container');
+                        if (addContainer) { categoryUl.insertBefore(li, addContainer); }
+                        else { categoryUl.appendChild(li); }
+                    });
+                }
             }
-        }
+        };
 
-        for (const char in watchlistAnimes) {
-            const categoryUl = watchlistAnimeListEl.querySelector(`ul.anime-category h3[data-char="${char}"]`)?.parentNode;
-            if (categoryUl) {
-                watchlistAnimes[char].sort((a, b) => a.name.localeCompare(b.name));
-                watchlistAnimes[char].forEach(anime => {
-                    const li = createAnimeListItem(anime, 'watchlist');
-                    const addContainer = categoryUl.querySelector('.add-anime-container');
-                    if (addContainer) {
-                        categoryUl.insertBefore(li, addContainer);
-                    } else {
-                        categoryUl.appendChild(li);
-                    }
-                });
-            }
-        }
-
-        for (const char in badAnimes) {
-            const categoryUl = badAnimeListEl.querySelector(`ul.anime-category h3[data-char="${char}"]`)?.parentNode;
-            if (categoryUl) {
-                badAnimes[char].sort((a, b) => a.name.localeCompare(b.name));
-                badAnimes[char].forEach(anime => {
-                    const li = createAnimeListItem(anime, 'bad');
-                    const addContainer = categoryUl.querySelector('.add-anime-container');
-                    if (addContainer) {
-                        categoryUl.insertBefore(li, addContainer);
-                    } else {
-                        categoryUl.appendChild(li);
-                    }
-                });
-            }
-        }
+        renderSection(watchedAnimes, watchedAnimeListEl, 'watched');
+        renderSection(watchlistAnimes, watchlistAnimeListEl, 'watchlist');
+        renderSection(badAnimes, badAnimeListEl, 'bad');
     };
-    
+
     const addReturnButton = (li) => {
         if (!li.querySelector('.return-btn')) {
             const returnBtn = document.createElement('span');
@@ -237,34 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const animeName = li.querySelector('a').textContent;
                 const animeLink = li.querySelector('a').href;
                 const char = animeName.charAt(0).toUpperCase();
-                const targetChar = alphabet.includes(char) ? char : '#'; 
-                
+                const targetChar = alphabet.includes(char) ? char : '#';
                 const parentUl = li.closest('ul.anime-category');
 
                 if (parentUl && parentUl.closest('#watched-anime-list')) {
                     watchedAnimes[targetChar] = watchedAnimes[targetChar].filter(anime => anime.name !== animeName);
                 } else if (parentUl && parentUl.closest('#bad-anime-list')) {
                     badAnimes[targetChar] = badAnimes[targetChar].filter(anime => anime.name !== animeName);
-                } else {
-                    return; 
-                }
+                } else { return; }
 
-                const newAnime = { name: animeName, link: animeLink };
-                const currentWatchlist = watchlistAnimes[targetChar];
-                let inserted = false;
-                for (let i = 0; i < currentWatchlist.length; i++) {
-                    if (newAnime.name.localeCompare(currentWatchlist[i].name) < 0) {
-                        currentWatchlist.splice(i, 0, newAnime);
-                        inserted = true;
-                        break;
-                    }
-                }
-                if (!inserted) {
-                    currentWatchlist.push(newAnime);
-                }
-                
-                saveData();
-                renderAnimes();
+                watchlistAnimes[targetChar].push({ name: animeName, link: animeLink });
+                saveData(); renderAnimes();
             });
             li.appendChild(returnBtn);
         }
@@ -278,28 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
             watchedBtn.addEventListener('click', () => {
                 const animeName = li.querySelector('a').textContent;
                 const animeLink = li.querySelector('a').href;
-                
-                const firstCharOfAnime = animeName.charAt(0).toUpperCase();
-                const targetChar = alphabet.includes(firstCharOfAnime) ? firstCharOfAnime : '#';
+                const char = animeName.charAt(0).toUpperCase();
+                const targetChar = alphabet.includes(char) ? char : '#';
 
                 watchlistAnimes[targetChar] = watchlistAnimes[targetChar].filter(anime => anime.name !== animeName);
-
-                const newAnime = { name: animeName, link: animeLink };
-                const currentWatchedList = watchedAnimes[targetChar];
-                let inserted = false;
-                for (let i = 0; i < currentWatchedList.length; i++) {
-                    if (newAnime.name.localeCompare(currentWatchedList[i].name) < 0) {
-                        currentWatchedList.splice(i, 0, newAnime);
-                        inserted = true;
-                        break;
-                    }
-                }
-                if (!inserted) {
-                    currentWatchedList.push(newAnime);
-                }
-                
-                saveData();
-                renderAnimes();
+                watchedAnimes[targetChar].push({ name: animeName, link: animeLink });
+                saveData(); renderAnimes();
             });
             li.prepend(watchedBtn);
         }
@@ -313,43 +328,24 @@ document.addEventListener('DOMContentLoaded', () => {
             badBtn.addEventListener('click', () => {
                 const animeName = li.querySelector('a').textContent;
                 const animeLink = li.querySelector('a').href;
-                
-                const firstCharOfAnime = animeName.charAt(0).toUpperCase();
-                const targetChar = alphabet.includes(firstCharOfAnime) ? firstCharOfAnime : '#';
+                const char = animeName.charAt(0).toUpperCase();
+                const targetChar = alphabet.includes(char) ? char : '#';
 
                 watchlistAnimes[targetChar] = watchlistAnimes[targetChar].filter(anime => anime.name !== animeName);
-
-                const newAnime = { name: animeName, link: animeLink };
-                const currentBadList = badAnimes[targetChar];
-                let inserted = false;
-                for (let i = 0; i < currentBadList.length; i++) {
-                    if (newAnime.name.localeCompare(currentBadList[i].name) < 0) {
-                        currentBadList.splice(i, 0, newAnime);
-                        inserted = true;
-                        break;
-                    }
-                }
-                if (!inserted) {
-                    currentBadList.push(newAnime);
-                }
-                
-                saveData();
-                renderAnimes();
+                badAnimes[targetChar].push({ name: animeName, link: animeLink });
+                saveData(); renderAnimes();
             });
             li.prepend(badBtn);
         }
     };
-    
+
     const addDeleteButton = (li) => {
         const deleteBtn = document.createElement('span');
         deleteBtn.textContent = '🗑️';
         deleteBtn.classList.add('delete-btn');
         deleteBtn.addEventListener('click', () => {
             const animeName = li.querySelector('a').textContent;
-            
-            const confirmation = confirm(`Sind Sie sicher, dass Sie "${animeName}" unwiderruflich löschen möchten?`);
-            
-            if (confirmation) {
+            if (confirm(`Sind Sie sicher, dass Sie "${animeName}" unwiderruflich löschen möchten?`)) {
                 const char = animeName.charAt(0).toUpperCase();
                 const targetChar = alphabet.includes(char) ? char : '#';
                 const parentUl = li.closest('ul.anime-category');
@@ -361,16 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (parentUl && parentUl.closest('#bad-anime-list')) {
                     badAnimes[targetChar] = badAnimes[targetChar].filter(anime => anime.name !== animeName);
                 }
-                
+
                 delete animeNotes[animeName];
-                
-                saveData();
-                renderAnimes();
+                delete animeMoments[animeName];
+                saveData(); renderAnimes();
             }
         });
         li.appendChild(deleteBtn);
     };
-
 
     const addInputAndButton = (categoryUl) => {
         const categoryHeader = categoryUl.querySelector('h3');
@@ -385,8 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameInputGroup = document.createElement('div');
         nameInputGroup.classList.add('input-group');
         const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.placeholder = 'Anime-Name eingeben...';
+        nameInput.type = 'text'; nameInput.placeholder = 'Anime-Name eingeben...';
         nameInput.classList.add('add-anime-input');
         nameInputGroup.appendChild(nameInput);
         addAnimeContainer.appendChild(nameInputGroup);
@@ -394,8 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkInputGroup = document.createElement('div');
         linkInputGroup.classList.add('input-group');
         const linkInput = document.createElement('input');
-        linkInput.type = 'url';
-        linkInput.placeholder = 'Link zum Anime eingeben...';
+        linkInput.type = 'url'; linkInput.placeholder = 'Link zum Anime eingeben...';
         linkInput.classList.add('add-anime-input', 'add-anime-link-input');
         linkInputGroup.appendChild(linkInput);
         addAnimeContainer.appendChild(linkInputGroup);
@@ -408,89 +400,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const animeName = nameInput.value.trim();
             const animeLink = linkInput.value.trim();
             const firstCharOfAnime = animeName.charAt(0).toUpperCase();
-            
-            const categoryChar = categoryUl.querySelector('h3').dataset.char;
-
-            if (animeName) {
-                if (categoryChar === '#') {
-                    if (!numbers.includes(animeName.charAt(0))) {
-                        if (alphabet.includes(firstCharOfAnime)) {
-                            alert('Fehler ID10T');
-                            nameInput.value = '';
-                            linkInput.value = '';
-                            return;
-                        }
-                    }
-                } else {
-                    if (firstCharOfAnime !== categoryChar && alphabet.includes(firstCharOfAnime)) {
-                        alert('Fehler ID10T');
-                        nameInput.value = '';
-                        linkInput.value = '';
-                        return;
-                    }
-                }
-            }
 
             if (animeName && animeLink) {
                 const targetCharForAnime = alphabet.includes(firstCharOfAnime) ? firstCharOfAnime : '#';
-
                 const newAnime = { name: animeName, link: animeLink };
-                
+
                 const isWatchlistCategory = categoryUl.closest('#watchlist-anime-list') !== null;
                 const isBadCategory = categoryUl.closest('#bad-anime-list') !== null;
+                let targetList = isWatchlistCategory ? watchlistAnimes : (isBadCategory ? badAnimes : watchedAnimes);
 
-                let targetList;
-                if (isWatchlistCategory) {
-                    targetList = watchlistAnimes;
-                } else if (isBadCategory) {
-                    targetList = badAnimes;
-                } else {
-                    targetList = watchedAnimes;
-                }
-
-                const currentCategoryList = targetList[targetCharForAnime];
-                
-                if (!currentCategoryList) {
-                    console.error(`Kategorie für '${targetCharForAnime}' in der Liste nicht gefunden.`);
-                    alert('Ein interner Fehler ist aufgetreten (Kategorie nicht gefunden).');
-                    nameInput.value = '';
-                    linkInput.value = '';
-                    return;
-                }
-
-                let inserted = false;
-                for (let i = 0; i < currentCategoryList.length; i++) {
-                    if (newAnime.name.localeCompare(currentCategoryList[i].name) < 0) {
-                        currentCategoryList.splice(i, 0, newAnime);
-                        inserted = true;
-                        break;
-                    }
-                }
-                if (!inserted) {
-                    currentCategoryList.push(newAnime);
-                }
-                
-                saveData();
-                renderAnimes();
-
-                nameInput.value = '';
-                linkInput.value = '';
+                targetList[targetCharForAnime].push(newAnime);
+                saveData(); renderAnimes();
+                nameInput.value = ''; linkInput.value = '';
             } else {
                 alert('Bitte füllen Sie beide Felder aus.');
-            }
-        });
-
-        nameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                button.click();
-            }
-        });
-
-        linkInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                button.click();
             }
         });
 
@@ -499,98 +422,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         toggleButton.addEventListener('click', () => {
             addAnimeContainer.classList.toggle('visible');
-            if (addAnimeContainer.classList.contains('visible')) {
-                toggleButton.textContent = '-';
-            } else {
-                toggleButton.textContent = '+';
-            }
+            toggleButton.textContent = addAnimeContainer.classList.contains('visible') ? '-' : '+';
         });
-    };
-
-    const extractInitialDataFromHtml = () => {
-        const initialWatched = {};
-        const initialWatchlist = {};
-        const initialBad = {};
-
-        alphabet.split('').forEach(char => {
-            initialWatched[char] = [];
-            initialWatchlist[char] = [];
-            initialBad[char] = [];
-        });
-        initialWatched['#'] = [];
-        initialWatchlist['#'] = [];
-        initialBad['#'] = [];
-
-
-        watchedAnimeListEl.querySelectorAll('ul.anime-category').forEach(categoryUl => {
-            const char = categoryUl.querySelector('h3').textContent.trim().charAt(0).toUpperCase();
-            const targetChar = alphabet.includes(char) ? char : '#';
-            if (initialWatched[targetChar]) {
-                categoryUl.querySelectorAll('li').forEach(li => {
-                    const linkEl = li.querySelector('a');
-                    if (linkEl && linkEl.textContent.trim()) {
-                        initialWatched[targetChar].push({
-                            name: linkEl.textContent.trim(),
-                            link: linkEl.href
-                        });
-                    }
-                });
-            }
-        });
-
-        watchlistAnimeListEl.querySelectorAll('ul.anime-category').forEach(categoryUl => {
-            const char = categoryUl.querySelector('h3').textContent.trim().charAt(0).toUpperCase();
-            const targetChar = alphabet.includes(char) ? char : '#';
-             if (initialWatchlist[targetChar]) {
-                categoryUl.querySelectorAll('li').forEach(li => {
-                    const linkEl = li.querySelector('a');
-                    if (linkEl && linkEl.textContent.trim()) {
-                        initialWatchlist[targetChar].push({
-                            name: linkEl.textContent.trim(),
-                            link: linkEl.href
-                        });
-                    }
-                });
-            }
-        });
-
-        badAnimeListEl.querySelectorAll('ul.anime-category').forEach(categoryUl => {
-            const char = categoryUl.querySelector('h3').textContent.trim().charAt(0).toUpperCase();
-            const targetChar = alphabet.includes(char) ? char : '#';
-            if (initialBad[targetChar]) {
-                categoryUl.querySelectorAll('li').forEach(li => {
-                    const linkEl = li.querySelector('a');
-                    if (linkEl && linkEl.textContent.trim()) {
-                        initialBad[targetChar].push({
-                            name: linkEl.textContent.trim(),
-                            link: linkEl.href
-                        });
-                    }
-                });
-            }
-        });
-
-        return { initialWatched, initialWatchlist, initialBad };
     };
 
     const downloadData = () => {
         const dataToSave = {
-            watched: watchedAnimes,
-            watchlist: watchlistAnimes,
-            bad: badAnimes,
-            notes: animeNotes
+            watched: watchedAnimes, watchlist: watchlistAnimes, bad: badAnimes,
+            notes: animeNotes, moments: animeMoments
         };
-        const filename = 'Anime Liste.json';
         const jsonStr = JSON.stringify(dataToSave, null, 2);
-
         const blob = new Blob([jsonStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        a.href = url; a.download = 'Anime Liste.json';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
 
@@ -605,20 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         watchedAnimes = uploadedData.watched;
                         watchlistAnimes = uploadedData.watchlist;
                         badAnimes = uploadedData.bad;
-                        if (uploadedData.notes) {
-                            animeNotes = uploadedData.notes;
-                        } else {
-                            animeNotes = {};
-                        }
-                        saveData();
-                        renderAnimes();
-                        alert('Anime erfolgreich geladen!');
-                    } else {
-                        alert('Üngiltiger JSON Datei. Sichere das "watched", "watchlist" und "bad" in der Liste gibt.');
-                    }
-                } catch (error) {
-                    alert('Error ID10T: ' + error.message);
-                }
+                        animeNotes = uploadedData.notes || {};
+                        animeMoments = uploadedData.moments || {};
+
+                        saveData(); renderAnimes();
+                        alert('Anime-Daten erfolgreich geladen!');
+                    } else { alert('Ungültige JSON-Datei.'); }
+                } catch (error) { alert('Fehler beim Laden: ' + error.message); }
             };
             reader.readAsText(file);
         }
@@ -628,33 +467,8 @@ document.addEventListener('DOMContentLoaded', () => {
     uploadDataBtn.addEventListener('click', () => uploadDataInput.click());
     uploadDataInput.addEventListener('change', uploadData);
 
-    document.querySelectorAll('.anime-category h3').forEach(h3 => {
-        const char = h3.textContent.trim().charAt(0).toUpperCase();
-        if (alphabet.includes(char)) {
-             h3.dataset.char = char;
-        } else {
-             h3.dataset.char = '#';
-        }
-    });
-
+    // Initialisierung
+    generateCategoryHTML();
     loadData();
-
-    if (Object.values(watchedAnimes).every(arr => arr.length === 0) &&
-        Object.values(watchlistAnimes).every(arr => arr.length === 0) &&
-        Object.values(badAnimes).every(arr => arr.length === 0)) {
-        console.log("Keine Daten im localStorage, standart Code aus HTML wird angewendet.");
-        const initialData = extractInitialDataFromHtml();
-        watchedAnimes = initialData.initialWatched;
-        watchlistAnimes = initialData.initialWatchlist;
-        badAnimes = initialData.initialBad;
-        saveData();
-    } else {
-        console.log("Daten aus localStorage geladen.");
-    }
-
     renderAnimes();
-
-    document.querySelectorAll('.anime-category').forEach(categoryUl => {
-        addInputAndButton(categoryUl);
-    });
 });
