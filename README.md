@@ -24,3 +24,7 @@ Die Eigenschaften:
   2. Beste Momente eingeben
     - Staffel | Episode | Zeit | Zitat / Beschreibung
       - _Beispiel: 1 | 1 | 1:01 | Es war einmal ein Hase..._
+
+
+# Disclaimer
+Diese Website wurde mit Unterstützung einer KI entwickelt.
